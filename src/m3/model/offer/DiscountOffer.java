@@ -6,5 +6,11 @@ public class DiscountOffer extends Offer {
     public DiscountOffer(double percentage) {
         this.percentage = percentage;
     }
+    
+    @Override
+	public double getOfferType() {
+		return percentage;
+		
+	}
 
 }
