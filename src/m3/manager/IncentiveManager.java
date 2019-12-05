@@ -13,6 +13,39 @@ import java.util.List;
 
 public class IncentiveManager implements IncentiveManagement {
 
+    private double CalculatePrice(Vehicle vehicle, List<Incentive> incentives) {
+		if(incentives.size() > 2)
+			return -1;
+		else if(incentives.size() == 2) {
+			double FinalPrice = 0;
+			for(int i = 0; i < incentives.size(); i++) {
+				if(incentives.get(i).getOffer().getClass() == DiscountOffer.class) {
+					FinalPrice += vehicle.getPrice() * incentives.get(0).getOffer().getOfferType();
+				}
+			}
+			
+			for(int i = 0; i < incentives.size(); i++) {
+				if(incentives.get(i).getOffer().getClass() == CashBackOffer.class) {
+					FinalPrice += vehicle.getPrice() - incentives.get(0).getOffer().getOfferType();
+				}
+			}
+			return FinalPrice;
+			
+		}
+		else if(incentives.size() == 1){
+			if(incentives.get(0).getOffer().getClass() == DiscountOffer.class) {
+				return vehicle.getPrice() * incentives.get(0).getOffer().getOfferType();
+			}
+			else {
+				return vehicle.getPrice() - incentives.get(0).getOffer().getOfferType();
+			}
+		}
+		else {
+			return vehicle.getPrice();
+		}
+		
+	}
+    
     public IncentivesFinalPrice getBestIncentives(Vehicle vehicle, List<Incentive> incentives) {
         // split by offer and sort offer in descending (90%, 10%) (-300, -100) // one function
         List<List<Incentive>> list = this.splitAndSortIncentivesByOfferType(incentives);
