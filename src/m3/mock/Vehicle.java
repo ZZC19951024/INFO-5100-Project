@@ -4,6 +4,7 @@ public class Vehicle {
     private String brand;
     private int id;
     private Dealer dealer;
+    private double price;
 
     public Dealer getDealer() {
         return dealer;
@@ -18,4 +19,9 @@ public class Vehicle {
     public int getId() {
         return id;
     }
+
+
+	public double getPrice() {
+		return price;
+	}
 }
