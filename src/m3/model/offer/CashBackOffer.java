@@ -6,5 +6,11 @@ public class CashBackOffer extends Offer {
     public CashBackOffer(double cashBack) {
         this.cashBack = cashBack;
     }
+    
+    @Override
+	public double getOfferType() {
+		return cashBack;
+	}
+   
 
 }
