@@ -14,37 +14,35 @@ import java.util.List;
 public class IncentiveManager implements IncentiveManagement {
 
     private double CalculatePrice(Vehicle vehicle, List<Incentive> incentives) {
-		if(incentives.size() > 2)
-			return -1;
-		else if(incentives.size() == 2) {
-			double FinalPrice = 0;
-			for(int i = 0; i < incentives.size(); i++) {
-				if(incentives.get(i).getOffer().getClass() == DiscountOffer.class) {
-					FinalPrice += vehicle.getPrice() * incentives.get(0).getOffer().getOfferType();
-				}
-			}
-			
-			for(int i = 0; i < incentives.size(); i++) {
-				if(incentives.get(i).getOffer().getClass() == CashBackOffer.class) {
-					FinalPrice += vehicle.getPrice() - incentives.get(0).getOffer().getOfferType();
-				}
-			}
-			return FinalPrice;
-			
-		}
-		else if(incentives.size() == 1){
-			if(incentives.get(0).getOffer().getClass() == DiscountOffer.class) {
-				return vehicle.getPrice() * incentives.get(0).getOffer().getOfferType();
+		double FinalPrice = vehicle.getPrice();
+		
+		for(int i = 0; i < incentives.size(); i++) {
+			if(incentives.get(i).getOffer().getClass() == DiscountOffer.class) {
+				FinalPrice = FinalPrice * incentives.get(i).getOffer().getValue();
 			}
 			else {
-				return vehicle.getPrice() - incentives.get(0).getOffer().getOfferType();
+				FinalPrice = FinalPrice - incentives.get(i).getOffer().getValue();
+			}
+			
+			if(i+1 > incentives.size()) {
+				if(checkPriceAvaliable(vehicle,incentives.get(i))) {
+					FinalPrice = FinalPrice - incentives.get(i).getOffer().getValue();
+				}
 			}
 		}
-		else {
-			return vehicle.getPrice();
-		}
 		
+		return FinalPrice;
 	}
+	
+	public boolean checkPriceAvaliable(Vehicle vehicle, Incentive incentive) {
+		for (Filter condition : incentive.getConditions()) {
+			if(condition.getClass().getName().contains("Price")) {
+				if (!condition.isApplicable(vehicle))
+	                return false;
+			}
+        }
+        return true;
+    }
     
     public IncentivesFinalPrice getBestIncentives(Vehicle vehicle, List<Incentive> incentives) {
         // split by offer and sort offer in descending (90%, 10%) (-300, -100) // one function
