@@ -17,15 +17,17 @@ public class IncentiveManager implements IncentiveManagement {
 		double FinalPrice = vehicle.getPrice();
 		
 		for(int i = 0; i < incentives.size(); i++) {
-			if(incentives.get(i).getOffer().getClass() == DiscountOffer.class) {
-				FinalPrice = FinalPrice * incentives.get(i).getOffer().getValue();
-			}
-			else {
-				FinalPrice = FinalPrice - incentives.get(i).getOffer().getValue();
-			}
-			
 			if(i+1 > incentives.size()) {
 				if(checkPriceAvaliable(vehicle,incentives.get(i))) {
+					FinalPrice = FinalPrice - incentives.get(i).getOffer().getValue();
+				}
+			}
+			
+			else{
+				if(incentives.get(i).getOffer().getClass() == DiscountOffer.class) {
+					FinalPrice = FinalPrice * incentives.get(i).getOffer().getValue();
+				}
+				else {
 					FinalPrice = FinalPrice - incentives.get(i).getOffer().getValue();
 				}
 			}
@@ -38,9 +40,9 @@ public class IncentiveManager implements IncentiveManagement {
 		for (Filter condition : incentive.getConditions()) {
 			if(condition.getClass().getName().contains("Price")) {
 				if (!condition.isApplicable(vehicle))
-	                return false;
+	                		return false;
 			}
-        }
+        	}
         return true;
     }
     
